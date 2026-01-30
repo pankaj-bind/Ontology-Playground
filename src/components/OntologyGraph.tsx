@@ -1,8 +1,12 @@
 import { useEffect, useRef, useCallback, useMemo } from 'react';
 import cytoscape from 'cytoscape';
+import fcose from 'cytoscape-fcose';
 import type { Core, EventObject } from 'cytoscape';
 import { useAppStore } from '../store/appStore';
 import { ZoomIn, ZoomOut, Maximize2, RotateCcw } from 'lucide-react';
+
+// Register fcose layout
+cytoscape.use(fcose);
 
 export function OntologyGraph() {
   const cyRef = useRef<Core | null>(null);
@@ -157,7 +161,9 @@ export function OntologyGraph() {
             'line-color': initialThemeColors.current.edgeColor,
             'target-arrow-color': initialThemeColors.current.edgeColor,
             'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier',
+            'curve-style': 'unbundled-bezier',
+            'control-point-step-size': 40,
+            'edge-distances': 'node-position',
             'transition-property': 'width, line-color, target-arrow-color',
             'transition-duration': 200
           }
@@ -191,21 +197,24 @@ export function OntologyGraph() {
         }
       ],
       layout: {
-        name: 'cose',
-        idealEdgeLength: () => 180,
-        nodeOverlap: 40,
-        refresh: 20,
+        name: 'fcose',
+        quality: 'proof',
+        randomize: false,
+        animate: false,
         fit: true,
         padding: 60,
-        randomize: false,
-        componentSpacing: 120,
-        nodeRepulsion: () => 8000,
-        edgeElasticity: () => 100,
-        nestingFactor: 5,
-        gravity: 80,
-        numIter: 1000,
-        coolingFactor: 0.95,
-        minTemp: 1.0
+        nodeDimensionsIncludeLabels: true,
+        nodeRepulsion: () => 15000,
+        idealEdgeLength: () => 200,
+        edgeElasticity: () => 0.45,
+        nestingFactor: 0.1,
+        gravity: 0.25,
+        gravityRange: 3.8,
+        numIter: 2500,
+        tile: true,
+        tilingPaddingVertical: 40,
+        tilingPaddingHorizontal: 40,
+        nodeSeparation: 100
       },
       minZoom: 0.3,
       maxZoom: 3
@@ -251,6 +260,21 @@ export function OntologyGraph() {
 
     cyRef.current = cy;
     mountedRef.current = true;
+
+    // Run layout explicitly after initialization for better results
+    cy.layout({
+      name: 'fcose',
+      quality: 'proof',
+      randomize: true,
+      animate: false,
+      fit: true,
+      padding: 60,
+      nodeDimensionsIncludeLabels: true,
+      nodeRepulsion: () => 15000,
+      idealEdgeLength: () => 200,
+      edgeElasticity: () => 0.45,
+      nodeSeparation: 100
+    }).run();
 
     return () => {
       mountedRef.current = false;
@@ -373,12 +397,17 @@ export function OntologyGraph() {
     if (cy) {
       try {
         cy.layout({
-          name: 'cose',
-          idealEdgeLength: () => 180,
-          nodeOverlap: 40,
+          name: 'fcose',
+          quality: 'proof',
+          randomize: true,
+          animate: true,
+          animationDuration: 500,
           fit: true,
           padding: 60,
-          nodeRepulsion: () => 8000
+          nodeDimensionsIncludeLabels: true,
+          nodeRepulsion: () => 15000,
+          idealEdgeLength: () => 200,
+          nodeSeparation: 100
         }).run();
       } catch { /* ignore */ }
     }
