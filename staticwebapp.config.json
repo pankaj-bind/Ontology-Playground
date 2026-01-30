@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/staticwebapp.config.json",
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/*.svg", "/*.ico", "/*.png", "/*.jpg"]
+    "exclude": ["/assets/*", "/*.svg", "/*.ico", "/*.png", "/*.jpg", "/*.js", "/*.css", "/api/*"]
   },
   "routes": [
     {
@@ -19,12 +19,18 @@
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
-    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' /api/*",
     "Referrer-Policy": "strict-origin-when-cross-origin"
   },
   "mimeTypes": {
+    ".js": "text/javascript",
+    ".mjs": "text/javascript",
+    ".jsx": "text/javascript",
+    ".ts": "text/javascript",
+    ".tsx": "text/javascript",
     ".json": "application/json",
     ".woff2": "font/woff2",
-    ".woff": "font/woff"
+    ".woff": "font/woff",
+    ".css": "text/css"
   }
 }
