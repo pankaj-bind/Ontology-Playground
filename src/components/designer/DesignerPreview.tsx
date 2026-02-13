@@ -240,8 +240,8 @@ function RdfPreview({ ontology, onImported }: RdfPreviewProps) {
           </>
         ) : (
           <>
-            <button className="designer-add-btn small" onClick={() => { setImportMode(true); setImportText(''); }}>
-              Paste RDF
+            <button className="designer-add-btn small" onClick={() => { setImportMode(true); setImportText(rdfOutput); }}>
+              Edit RDF
             </button>
             <button className="designer-add-btn small" onClick={handleCopy}>
               {copied ? 'Copied!' : 'Copy RDF'}
@@ -257,7 +257,7 @@ function RdfPreview({ ontology, onImported }: RdfPreviewProps) {
           className="designer-rdf-source designer-rdf-textarea"
           value={importText}
           onChange={(e) => { setImportText(e.target.value); setImportError(null); }}
-          placeholder="Paste RDF/XML content here…"
+          placeholder="Paste or edit RDF/XML content here…"
           autoFocus
           spellCheck={false}
         />
