@@ -103,6 +103,7 @@ body {
   grid-template-columns: 280px 1fr 360px;
   grid-template-rows: 64px 1fr;
   height: 100vh;
+  height: 100dvh;
   gap: 0;
 }
 
@@ -1064,7 +1065,9 @@ body {
 @media (max-width: 900px) {
   .app-container {
     grid-template-columns: 1fr;
-    grid-template-rows: 56px 1fr;
+    grid-template-rows: 56px 1fr auto;
+    height: 100vh;
+    height: 100dvh;
   }
   
   .quest-panel,
@@ -1091,10 +1094,13 @@ body {
   /* Mobile bottom tabs */
   .mobile-panel-tabs {
     display: flex;
+    padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
   }
 
-  .app-container {
-    grid-template-rows: 56px 1fr auto;
+  /* Graph must not overflow its grid cell */
+  .graph-container {
+    min-height: 0;
+    overflow: hidden;
   }
 
   /* Graph fills available space */
@@ -1656,6 +1662,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh;
   background: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -3204,7 +3211,7 @@ body {
     display: flex;
     flex-direction: column;
     position: fixed;
-    bottom: 48px;
+    bottom: calc(48px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     top: 56px;
