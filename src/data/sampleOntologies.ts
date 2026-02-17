@@ -45,7 +45,7 @@ const ecommerceOntology: Ontology = {
     },
     {
       id: "cart",
-      name: "Shopping Cart",
+      name: "Shopping-Cart",
       description: "Active shopping session",
       icon: "🛍️",
       color: "#FFB900",
@@ -302,7 +302,7 @@ const manufacturingOntology: Ontology = {
     },
     {
       id: "workorder",
-      name: "Work Order",
+      name: "Work-Order",
       description: "Production job",
       icon: "📋",
       color: "#FFB900",
@@ -330,7 +330,7 @@ const manufacturingOntology: Ontology = {
     },
     {
       id: "qualitycheck",
-      name: "Quality Check",
+      name: "Quality-Check",
       description: "Inspection result",
       icon: "✅",
       color: "#8764B8",

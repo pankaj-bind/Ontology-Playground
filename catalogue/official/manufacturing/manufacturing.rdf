@@ -31,7 +31,7 @@
     </owl:Class>
 
     <owl:Class rdf:about="http://example.org/ontology/smart-manufacturing/Workorder">
-        <rdfs:label>Work Order</rdfs:label>
+        <rdfs:label>Work-Order</rdfs:label>
         <rdfs:comment>Production job</rdfs:comment>
         <ont:icon>📋</ont:icon>
         <ont:color>#FFB900</ont:color>
@@ -45,7 +45,7 @@
     </owl:Class>
 
     <owl:Class rdf:about="http://example.org/ontology/smart-manufacturing/Qualitycheck">
-        <rdfs:label>Quality Check</rdfs:label>
+        <rdfs:label>Quality-Check</rdfs:label>
         <rdfs:comment>Inspection result</rdfs:comment>
         <ont:icon>✅</ont:icon>
         <ont:color>#8764B8</ont:color>

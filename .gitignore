@@ -26,3 +26,4 @@ build
 api/local.settings.json
 public/catalogue.json
 internal-docs/
+.vite

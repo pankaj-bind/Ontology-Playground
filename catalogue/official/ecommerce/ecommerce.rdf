@@ -31,7 +31,7 @@
     </owl:Class>
 
     <owl:Class rdf:about="http://example.org/ontology/e-commerce-platform/Cart">
-        <rdfs:label>Shopping Cart</rdfs:label>
+        <rdfs:label>Shopping-Cart</rdfs:label>
         <rdfs:comment>Active shopping session</rdfs:comment>
         <ont:icon>🛍️</ont:icon>
         <ont:color>#FFB900</ont:color>
