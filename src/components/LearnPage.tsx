@@ -197,7 +197,11 @@ function ArticleView({
   darkMode: boolean;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [presenting, setPresenting] = useState(false);
+  // Auto-open presentation if URL has ?slide= param
+  const [presenting, setPresenting] = useState(() => {
+    const hash = window.location.hash;
+    return /[?&]slide=/.test(hash);
+  });
 
   const nextArticle = useMemo(
     () => course.articles.find((a) => a.order === article.order + 1),
@@ -290,7 +294,12 @@ function ArticleView({
         <PresentationMode
           article={article}
           darkMode={darkMode}
-          onClose={() => setPresenting(false)}
+          onClose={() => {
+            setPresenting(false);
+            // Strip ?slide= from the URL
+            const hash = window.location.hash.replace(/[?&]slide=\d+/, '');
+            history.replaceState(null, '', hash || '#/');
+          }}
         />
       )}
       <nav className="learn-article-nav">
@@ -391,11 +400,27 @@ function PresentationMode({
   darkMode: boolean;
   onClose: () => void;
 }) {
-  const [slideIndex, setSlideIndex] = useState(0);
-  const [presenterDark, setPresenterDark] = useState(initialDarkMode);
-  const slideRef = useRef<HTMLDivElement>(null);
   const slides = useMemo(() => splitIntoSlides(article.html, article.title), [article.html, article.title]);
   const total = slides.length;
+
+  // Read initial slide from URL (?slide=N, 1-based for humans)
+  const [slideIndex, setSlideIndex] = useState(() => {
+    const m = window.location.hash.match(/[?&]slide=(\d+)/);
+    if (m) {
+      const n = parseInt(m[1], 10) - 1;
+      return Math.max(0, Math.min(n, total - 1));
+    }
+    return 0;
+  });
+  const [presenterDark, setPresenterDark] = useState(initialDarkMode);
+  const slideRef = useRef<HTMLDivElement>(null);
+
+  // Sync slide index to URL (1-based for readability)
+  useEffect(() => {
+    const base = window.location.hash.replace(/[?&]slide=\d+/, '');
+    const sep = base.includes('?') ? '&' : '?';
+    history.replaceState(null, '', `${base}${sep}slide=${slideIndex + 1}`);
+  }, [slideIndex]);
 
   const goNext = useCallback(() => setSlideIndex((i) => Math.min(i + 1, total - 1)), [total]);
   const goPrev = useCallback(() => setSlideIndex((i) => Math.max(i - 1, 0)), []);
