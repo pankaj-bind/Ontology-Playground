@@ -820,6 +820,10 @@ function renderEmbedSlot(
       slot.classList.remove('learn-embed-fullscreen');
       slot.style.height = savedHeight;
     }
+    // Extra right padding when fullscreen inside presentation to avoid
+    // overlapping the presentation chrome (close / theme toggle buttons)
+    const inPresentation = !!slot.closest('.presentation-overlay');
+    titleBar.style.paddingRight = isFullscreen && inPresentation ? '100px' : '12px';
     slot.style.borderRadius = isFullscreen ? '0' : '8px';
     slot.style.border = isFullscreen ? 'none' : `1px solid ${borderColor}`;
     slot.style.overflow = 'hidden';
