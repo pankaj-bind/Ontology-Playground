@@ -112,9 +112,9 @@ Client-side hash routing with shareable URLs for every page:
 |-------|------|
 | `/#/` | Home (default ontology) |
 | `/#/catalogue` | Ontology gallery |
-| `/#/catalogue/<id>` | Specific ontology |
+| `/#/catalogue/<source>/<slug>` | Specific ontology (e.g. `/#/catalogue/official/cosmic-coffee`) |
 | `/#/designer` | Visual designer |
-| `/#/designer/<id>` | Designer with catalogue ontology |
+| `/#/designer/<source>/<slug>` | Designer with catalogue ontology (e.g. `/#/designer/official/cosmic-coffee`) |
 | `/#/learn` | Ontology School — course catalogue |
 | `/#/learn/<course>` | Course detail — article list |
 | `/#/learn/<course>/<article>` | Article view (with presentation mode) |
