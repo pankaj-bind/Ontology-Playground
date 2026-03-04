@@ -1,0 +1,70 @@
+name: Ontology School Review Approval
+
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+jobs:
+  remove-under-review-marker:
+    if: contains(github.event.issue.labels.*.name, 'ontology-school-approved')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract lesson path from issue body
+        id: extract
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || '';
+            const sectionRegex = /###\s+Lesson Path\s*\n+([^\n]+)/i;
+            const match = body.match(sectionRegex);
+            if (!match) {
+              core.setFailed('Could not find "Lesson Path" in issue body.');
+              return;
+            }
+
+            const lessonPath = match[1].trim();
+            if (!lessonPath.startsWith('content/learn/') || !lessonPath.endsWith('.md')) {
+              core.setFailed(`Invalid lesson path: ${lessonPath}`);
+              return;
+            }
+
+            core.setOutput('lesson_path', lessonPath);
+
+      - name: Remove under-review marker
+        env:
+          LESSON_PATH: ${{ steps.extract.outputs.lesson_path }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! -f "$LESSON_PATH" ]]; then
+            echo "Lesson file not found: $LESSON_PATH"
+            exit 1
+          fi
+
+          # Remove the frontmatter marker if present.
+          # We target the exact line so this is idempotent.
+          sed -i '/^reviewStatus: under-human-review$/d' "$LESSON_PATH"
+
+      - name: Create approval PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/ontology-school-approve-${{ github.event.issue.number }}
+          title: "chore: approve ontology school lesson ${{ steps.extract.outputs.lesson_path }}"
+          body: |
+            Auto-generated from issue #${{ github.event.issue.number }}.
+
+            This PR removes `reviewStatus: under-human-review` from:
+            - `${{ steps.extract.outputs.lesson_path }}`
+
+            Triggered by closing an issue labeled `ontology-school-approved`.
+          commit-message: "chore: remove under-human-review marker from approved lesson"
+          labels: ontology-school-review
